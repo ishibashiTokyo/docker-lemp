@@ -1,6 +1,18 @@
-FROM php:7.4.7-fpm-alpine
-# timezone
-ARG TZ=Asia/Tokyo
-RUN apk upgrade --update
-# add modules
-RUN docker-php-ext-install pdo_mysql
+FROM php:7.3.19-fpm-alpine
+
+# # copy php.ini
+# COPY ./etc/php/php.ini /usr/local/etc/php/
+
+# install pdo, etc...
+RUN apk update && apk add --no-cache \
+  freetype-dev libjpeg-turbo-dev libpng-dev libmcrypt-dev \
+  git vim unzip tzdata \
+  libmcrypt-dev \
+  libltdl \
+  && docker-php-ext-install pdo_mysql mysqli mbstring gd iconv \
+  && cp /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
+  && apk del tzdata \
+  && rm -rf /var/cache/apk/*
+
+# install composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer

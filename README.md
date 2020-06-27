@@ -2,7 +2,7 @@
 
 - Nginx - nginx:1.19.0-alpine
 - MariaDB - mariadb:latest
-- PHP - php:7.4.7-fpm-alpine
+- PHP - php:7.3.19-fpm-alpine
 
 シンプルな LEMP 構成  
 Docker イメージがないような CMS を構築したり、PHP の開発環境として使用する。  
@@ -80,4 +80,65 @@ mysql> show grants;
 | GRANT ALL PRIVILEGES ON `docker\_db`.* TO `docker`@`%`        |
 +---------------------------------------------------------------+
 2 rows in set (0.00 sec)
+```
+
+## PHP モジュール
+
+```shell
+[PHP Modules]
+Core
+ctype
+curl
+date
+dom
+fileinfo
+filter
+ftp
+gd
+hash
+iconv
+json
+libxml
+mbstring
+mysqli
+mysqlnd
+openssl
+pcre
+PDO
+pdo_mysql
+pdo_sqlite
+Phar
+posix
+readline
+Reflection
+session
+SimpleXML
+sodium
+SPL
+sqlite3
+standard
+tokenizer
+xml
+xmlreader
+xmlwriter
+zlib
+```
+
+## メモ
+
+alpine Linux への接続  
+bash を指定すると存在しないというエラーが表示されるので ash を指定
+
+```shell
+% docker exec -it {CONTAINER ID} ash
+```
+
+Dockerfile の編集時はイメージを削除して再構築する
+
+```shell
+% docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+docker-lemp_app     latest              19182eeb031d        26 minutes ago      126MB
+...
+% docker rmi docker-lemp_app
 ```
