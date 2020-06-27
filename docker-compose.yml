@@ -17,8 +17,11 @@ services:
       DATABASE_HOST: db
     depends_on:
       - db
+    ports:
+      - "9000:9000"
     volumes:
       - ./data/html:/var/www/html
+      - ./app/docker-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
   db:
     image: mariadb:latest
     env_file: .env

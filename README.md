@@ -15,8 +15,6 @@
 
 ## TODO
 
-- xdebug の導入
-
 ## ファイル構成
 
 ```
@@ -133,6 +131,27 @@ xml
 xmlreader
 xmlwriter
 zlib
+```
+
+## Xdebug
+
+```shell
+# php -v
+PHP 7.3.19 (cli) (built: Jun 11 2020 21:05:09) ( NTS )
+Copyright (c) 1997-2018 The PHP Group
+Zend Engine v3.3.19, Copyright (c) 1998-2018 Zend Technologies
+    with Xdebug v2.9.6, Copyright (c) 2002-2020, by Derick Rethans
+```
+
+設定（./app/docker-xdebug.ini）
+
+```ini
+zend_extension=xdebug.so
+xdebug.remote_enable=1
+xdebug.remote_autostart=1
+;xdebug.remote_handler=dbgp
+xdebug.remote_host=host.docker.internal
+xdebug.remote_port=9001
 ```
 
 ## メモ
