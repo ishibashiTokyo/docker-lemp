@@ -1,17 +1,26 @@
 # Docker-LEMP
 
-- Nginx - nginx:1.19.0-alpine
-- MariaDB - mariadb:latest
-- PHP - php:7.3.19-fpm-alpine
+| ミドルウェア | サービス名 | 使用イメージ          |
+| ------------ | ---------- | --------------------- |
+| Nginx        | web        | nginx:1.19.0-alpine   |
+| PHP          | app        | php:7.3.19-fpm-alpine |
+| MariaDB      | db         | mariadb:latest        |
 
-シンプルな LEMP 構成  
-Docker イメージがないような CMS を構築したり、PHP の開発環境として使用する。  
-SSL 未対応
+概要
+
+- シンプルな LEMP 構成
+- alpine Linux でサイズを小さく
+- Docker イメージがないような CMS を構築したり、PHP の開発環境として使用する。
+- SSL 未対応
+
+## TODO
+
+- xdebug の導入
 
 ## ファイル構成
 
 ```
-lemp
+docker-lemp
 ├── .env # データベースの初期設定
 ├── .gitignore
 ├── README.md # 今読んでるこれ
@@ -32,6 +41,8 @@ lemp
 ```
 
 ## Mac に mysql クライアントの導入
+
+あまり環境を汚したくないけど Docker のデータベースに接続したいそんな感じ。
 
 インストール
 
@@ -142,3 +153,5 @@ docker-lemp_app     latest              19182eeb031d        26 minutes ago      
 ...
 % docker rmi docker-lemp_app
 ```
+
+php7.4 を導入しようとしたが oniguruma でエラーを吐いて断念。
