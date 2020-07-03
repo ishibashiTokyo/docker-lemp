@@ -1,10 +1,11 @@
 # Docker-LEMP
 
-| ミドルウェア | サービス名 | 使用イメージ          |
-| ------------ | ---------- | --------------------- |
-| Nginx        | web        | nginx:1.19.0-alpine   |
-| PHP          | app        | php:7.3.19-fpm-alpine |
-| MariaDB      | db         | mariadb:latest        |
+| ミドルウェア | サービス名 | ポート     | 使用イメージ          |
+| ------------ | ---------- | ---------- | --------------------- |
+| Nginx        | web        | 80         | nginx:1.19.0-alpine   |
+| PHP          | app        | 9000, 9001 | php:7.3.19-fpm-alpine |
+| MariaDB      | db         | 3306       | mariadb:latest        |
+| phpMyAdmin   | phpmyadmin | 8080       | phpmyadmin/phpmyadmin |
 
 概要
 
@@ -12,8 +13,12 @@
 - alpine Linux でサイズを小さく
 - Docker イメージがないような CMS を構築したり、PHP の開発環境として使用する。
 - SSL 未対応
+- phpMyAdmin http://localhost:8080/
+- composer を初期導入
 
 ## TODO
+
+- 設定ファイルの構成を整理
 
 ## ファイル構成
 
@@ -23,7 +28,8 @@ docker-lemp
 ├── .gitignore
 ├── README.md # 今読んでるこれ
 ├── app
-│   └── Dockerfile # php-fpmの設定ファイル
+│   ├── Dockerfile # php-fpmの設定ファイル
+│   └── docker-xdebug.ini # xdebugの設定ファイル
 ├── conf
 │   └── nginx
 │       └── default.conf # Nginxの初期設定
@@ -31,8 +37,6 @@ docker-lemp
 │   ├── html # ドキュメントルート
 │   │   └── index.php # サンプルプログラム
 │   └── mysql # DBの物理ファイルが格納（.gitignore）
-│       ├── .gitkeep
-│       └── ...
 ├── db
 │   └── initial.sql # 初期実行されるSQL文
 └── docker-compose.yml
@@ -95,11 +99,16 @@ mysql> show grants;
 
 ```shell
 [PHP Modules]
+bcmath
+bz2
+calendar
 Core
 ctype
 curl
 date
+dba
 dom
+exif
 fileinfo
 filter
 ftp
@@ -107,6 +116,7 @@ gd
 hash
 iconv
 json
+ldap
 libxml
 mbstring
 mysqli
@@ -115,21 +125,33 @@ openssl
 pcre
 PDO
 pdo_mysql
+pdo_pgsql
 pdo_sqlite
+pgsql
 Phar
 posix
 readline
 Reflection
 session
+shmop
 SimpleXML
-sodium
+snmp
+soap
+sockets
 SPL
 sqlite3
 standard
+sysvmsg
+sysvsem
+sysvshm
+tidy
 tokenizer
+wddx
 xml
 xmlreader
+xmlrpc
 xmlwriter
+xsl
 zlib
 ```
 
@@ -156,21 +178,35 @@ xdebug.remote_port=9001
 
 ## メモ
 
-alpine Linux への接続  
-bash を指定すると存在しないというエラーが表示されるので ash を指定
+- alpine Linux への接続  
+  bash を指定すると存在しないというエラーが表示されるので ash を指定
 
-```shell
-% docker exec -it {CONTAINER ID} ash
-```
+  ```shell
+  % docker exec -it {CONTAINER ID} ash
+  ```
 
-Dockerfile の編集時はイメージを削除して再構築する
+- Dockerfile の編集時はイメージを再構築する
 
-```shell
-% docker images
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-docker-lemp_app     latest              19182eeb031d        26 minutes ago      126MB
-...
-% docker rmi docker-lemp_app
-```
+  ```shell
+  % docker-compose build --no-cache
+  ```
 
-php7.4 を導入しようとしたが oniguruma でエラーを吐いて断念。
+  またはイメージの削除
+
+  ```shell
+  % docker images
+  REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+  docker-lemp_app     latest              19182eeb031d        26 minutes ago      126MB
+  ...
+  % docker rmi docker-lemp_app
+  ```
+
+- php7.4 を導入しようとしたが oniguruma でエラーを吐いて断念。
+
+- Laravel の新規プロジェクト作成  
+  PHP のイメージに繋いでから以下のコマンドを実行
+
+  ```shell
+  cd /var/www/html
+  composer create-project laravel/laravel プロジェクト名 --prefer-dist
+  ```

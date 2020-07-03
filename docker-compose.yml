@@ -30,3 +30,17 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
       - ./db/initial.sql:/docker-entrypoint-initdb.d/initial.sql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    links:
+      - db
+    ports:
+      - 8080:80
+    volumes:
+      - /sessions
